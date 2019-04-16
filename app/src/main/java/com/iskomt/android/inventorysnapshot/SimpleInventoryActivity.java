@@ -1,9 +1,14 @@
 package com.iskomt.android.inventorysnapshot;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-public class MainActivity extends AppCompatActivity {
+public class SimpleInventoryActivity extends SingleFragmentActivity {
+
+    @Override
+    protected Fragment createFragment() {
+        return new SimpleInventoryFragment();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
