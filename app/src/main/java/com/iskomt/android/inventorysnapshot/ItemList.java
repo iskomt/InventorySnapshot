@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +43,11 @@ public class ItemList {
     }
 
     public void getItem(int position){
+    }
+
+    public File getPhotoFile(Item item){
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, item.getPhotoFileName());
     }
 
     public List<Item> getItems(){

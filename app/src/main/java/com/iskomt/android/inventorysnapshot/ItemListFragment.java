@@ -1,5 +1,7 @@
 package com.iskomt.android.inventorysnapshot;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,24 @@ public class ItemListFragment extends Fragment {
     private RecyclerView mItemRecyclerView;
     private ItemAdapter mAdapter;
 
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onItemSelected(Item item);
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -37,6 +57,7 @@ public class ItemListFragment extends Fragment {
 
         }
 
+        updateUI();
         return view;
     }
 
@@ -51,10 +72,9 @@ public class ItemListFragment extends Fragment {
         switch(item.getItemId()) {
             case R.id.add_item:
                 Item i = new Item();
-                i.setName("Bad");
-                i.setPrice(30);
-                i.setQty(20);
                 ItemList.get(getActivity()).addItem(i);
+                updateUI();
+                mCallbacks.onItemSelected(i);
                 Log.d(TAG, "Item added successfully");
                 return true;
             default:
@@ -85,14 +105,16 @@ public class ItemListFragment extends Fragment {
             super(inflater.inflate(R.layout.list_tem,parent,false));
 
             itemView.setOnClickListener(this);
-            mPhotoView = (ImageView) itemView.findViewById(R.id.item_photo);
+            mPhotoView = (ImageView) itemView.findViewById(R.id.item_photoholder);
             mNameTextView = (TextView) itemView.findViewById(R.id.item_name);
             mQtyTextView = (TextView) itemView.findViewById(R.id.item_qty);
         }
 
         @Override
         public void onClick(View view) {
-
+            //mCallbacks.onItemSelected(mItem);
+            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
+            startActivity(intent);
 
         }
 

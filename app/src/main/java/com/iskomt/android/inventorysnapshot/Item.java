@@ -48,4 +48,6 @@ public class Item {
     public void setPrice(double price) {
         mPrice = price;
     }
+
+    public String getPhotoFileName() {return "IMG_" + getId().toString() + ".jpg";}
 }

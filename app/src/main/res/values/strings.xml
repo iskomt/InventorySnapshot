@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">InventorySnapshot</string>
+    <string name="item_id_label">Id</string>
+    <string name="item_name_label">Name</string>
+    <string name="item_qty_label">Quantity</string>
+    <string name="item_price_label">Price</string>
+
+
 </resources>
