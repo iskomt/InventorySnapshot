@@ -4,6 +4,8 @@
     <string name="item_name_label">Name</string>
     <string name="item_qty_label">Quantity</string>
     <string name="item_price_label">Price</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
 
 
 </resources>

@@ -37,9 +37,13 @@ public class ItemList {
     }
 
     public void deleteItem(Item item){
+        mDatabase.delete(ItemTable.NAME, ItemTable.Cols.UUID + " = ?",new String[]{item.getId().toString()});
     }
 
     public void updateItem(Item item){
+        String uuidString = item.getId().toString();
+        ContentValues values = getContentValues(item);
+        mDatabase.update(ItemTable.NAME, values, ItemTable.Cols.UUID + " = ?", new String[] {uuidString});
     }
 
     public void getItem(int position){

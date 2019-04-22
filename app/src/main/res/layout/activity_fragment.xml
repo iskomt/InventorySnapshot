@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.iskomt.android.inventorysnapshot.ItemListActivity">
+<FrameLayout
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.iskomt.android.inventorysnapshot.ItemListActivity">
-
-
+    android:layout_height="match_parent">
 </FrameLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/main_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        app:menu="@menu/nav_items"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_container"></android.support.design.widget.BottomNavigationView>
+</android.support.constraint.ConstraintLayout>

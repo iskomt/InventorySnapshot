@@ -79,7 +79,7 @@ public class ItemFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_item, container, false);
 
         mIdField = (EditText) v.findViewById(R.id.item_id_text);
@@ -92,6 +92,7 @@ public class ItemFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mItem.setId(UUID.fromString(charSequence.toString()));
 
             }
 
@@ -111,7 +112,7 @@ public class ItemFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mItem.setName(charSequence.toString());
             }
 
             @Override
@@ -130,7 +131,7 @@ public class ItemFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mItem.setQty(Double.parseDouble(charSequence.toString()));
             }
 
             @Override
@@ -149,7 +150,7 @@ public class ItemFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mItem.setPrice(Double.parseDouble(charSequence.toString()));
             }
 
             @Override
@@ -187,6 +188,13 @@ public class ItemFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode!= Activity.RESULT_OK){
             return;
+        }
+
+        if(requestCode == REQUEST_PHOTO) {
+            Uri uri = FileProvider.getUriForFile(getActivity(), "com.iskomt.android.inventorysnapshot.fileprovider", mPhotoFile);
+            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateCrime();
+            updatePhotoView();
         }
 
 
