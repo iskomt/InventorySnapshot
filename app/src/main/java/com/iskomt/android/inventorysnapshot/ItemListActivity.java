@@ -1,7 +1,9 @@
 package com.iskomt.android.inventorysnapshot;
 
-import android.support.design.widget.BottomNavigationView;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+
+import com.iskomt.android.inventorysnapshot.Model.Item;
 
 public class ItemListActivity extends SingleFragmentActivity implements ItemListFragment.Callbacks, ItemFragment.Callbacks{
 
@@ -12,7 +14,8 @@ public class ItemListActivity extends SingleFragmentActivity implements ItemList
 
     @Override
     public void onItemSelected(Item item) {
-
+        Intent intent = ItemPagerActivity.newIntent(this, item.getId());
+        startActivity(intent);
     }
 
     @Override

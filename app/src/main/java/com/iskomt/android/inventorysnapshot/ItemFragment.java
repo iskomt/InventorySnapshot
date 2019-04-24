@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,10 +17,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.iskomt.android.inventorysnapshot.Model.Item;
 
 import java.io.File;
 import java.util.List;
@@ -193,6 +193,7 @@ public class ItemFragment extends Fragment {
         if(requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.iskomt.android.inventorysnapshot.fileprovider", mPhotoFile);
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+           // mItem.setPhotoPath(mPhotoFile.getPath());
             updateCrime();
             updatePhotoView();
         }

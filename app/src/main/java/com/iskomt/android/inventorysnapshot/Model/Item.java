@@ -1,4 +1,4 @@
-package com.iskomt.android.inventorysnapshot;
+package com.iskomt.android.inventorysnapshot.Model;
 
 import java.util.UUID;
 
@@ -8,6 +8,7 @@ public class Item {
     private String mName;
     private double mQty;
     private double mPrice;
+    private String mPhotoPath;
 
     public Item(){
         this(UUID.randomUUID());
@@ -50,4 +51,8 @@ public class Item {
     }
 
     public String getPhotoFileName() {return "IMG_" + getId().toString() + ".jpg";}
+
+    public void setPhotoPath(String path) {mPhotoPath=path;}
+
+    public String getPhotoPath(){return mPhotoPath;}
 }

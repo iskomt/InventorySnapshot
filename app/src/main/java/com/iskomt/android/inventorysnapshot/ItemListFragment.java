@@ -2,6 +2,7 @@ package com.iskomt.android.inventorysnapshot;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemListFragment extends Fragment {
@@ -24,7 +34,13 @@ public class ItemListFragment extends Fragment {
     private RecyclerView mItemRecyclerView;
     private ItemAdapter mAdapter;
 
+    private RapidFloatingActionLayout rfaLayout;
+    private RapidFloatingActionButton rfaBtn;
+    private RapidFloatingActionHelper rfabHelper;
+
     private Callbacks mCallbacks;
+
+
 
     public interface Callbacks {
         void onItemSelected(Item item);
@@ -53,6 +69,47 @@ public class ItemListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         mItemRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
         mItemRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        rfaLayout = view.findViewById(R.id.activity_main_rfal);
+        rfaBtn = view.findViewById(R.id.activity_main_rfab);
+
+        //Floating action button
+        RapidFloatingActionContentLabelList rfaContent = new RapidFloatingActionContentLabelList(getContext());
+        rfaContent.setOnRapidFloatingActionContentLabelListListener(new RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener() {
+            @Override
+            public void onRFACItemLabelClick(int position, RFACLabelItem item) {
+                Toast.makeText(getContext(), "clicked label: " + position, Toast.LENGTH_SHORT).show();
+                rfabHelper.toggleContent();
+            }
+
+            @Override
+            public void onRFACItemIconClick(int position, RFACLabelItem item) {
+                Toast.makeText(getContext(), "clicked icon: " + position, Toast.LENGTH_SHORT).show();
+                rfabHelper.toggleContent();
+
+            }
+        });
+
+        List<RFACLabelItem> items = new ArrayList<>();
+        items.add(new RFACLabelItem<Integer>()
+                .setLabel("Github: wangjiegulu")
+                .setResId(R.drawable.baseline_home_black_24dp)
+                .setIconNormalColor(0xffd84315)
+                .setIconPressedColor(0xffbf360c)
+                .setWrapper(0)
+        );
+        rfaContent
+                .setItems(items)
+                .setIconShadowColor(0xff888888)
+        ;
+        rfabHelper = new RapidFloatingActionHelper(
+                getContext(),
+                rfaLayout,
+                rfaBtn,
+                rfaContent
+        ).build();
+
+
         if(savedInstanceState != null) {
 
         }
@@ -122,6 +179,14 @@ public class ItemListFragment extends Fragment {
             mItem = item;
             mNameTextView.setText(mItem.getName());
             mQtyTextView.setText(Double.toString(mItem.getQty()));
+            //Bitmap bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(),getActivity());
+            ItemList itemList = ItemList.get(getContext());
+            Bitmap bitmap = PictureUtils.getScaledBitmap(itemList.getPhotoFile(mItem).getAbsolutePath(),getActivity());
+
+                Log.d(TAG, itemList.getPhotoFile(mItem).getAbsolutePath().toString());
+
+            //mPhotoView.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+            mPhotoView.setImageBitmap(bitmap);
         }
     }
 

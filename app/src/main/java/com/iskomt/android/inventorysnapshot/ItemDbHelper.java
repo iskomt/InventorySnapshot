@@ -22,11 +22,13 @@ public class ItemDbHelper extends SQLiteOpenHelper {
                 ItemTable.Cols.UUID + ", " +
                 ItemTable.Cols.NAME + ", " +
                 ItemTable.Cols.QUANTITY + ", " +
-                ItemTable.Cols.PRICE + ")");
+                ItemTable.Cols.PRICE + "," +
+                ItemTable.Cols.PHOTO + ")");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("DROP TABLE IF EXISTS " + ItemTable.NAME);
+        onCreate(db);
     }
 }

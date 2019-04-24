@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.iskomt.android.inventorysnapshot.Model.Item;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +62,11 @@ public class ItemList {
         ItemCursorWrapper cursor = queryItems(null,null);
 
         try{
+
             cursor.moveToFirst();
+
             while(!cursor.isAfterLast()){
+
                 items.add(cursor.getItem());
                 cursor.moveToNext();
             }
@@ -105,6 +110,7 @@ public class ItemList {
         values.put(ItemTable.Cols.NAME, item.getName());
         values.put(ItemTable.Cols.QUANTITY, item.getQty());
         values.put(ItemTable.Cols.PRICE, item.getPrice());
+        values.put(ItemTable.Cols.PHOTO, item.getPhotoPath());
 
         return values;
     }
