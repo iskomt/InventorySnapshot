@@ -1,44 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/item_photoview"
-        android:layout_width="166dp"
-        android:layout_height="186dp"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <LinearLayout
+        android:id="@+id/item_images_layout"
+        android:layout_width="403dp"
+        android:layout_height="264dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@android:color/darker_gray"
-        android:cropToPadding="true"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageButton
-        android:id="@+id/item_camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:contentDescription="Take a photo of the crime scene"
-        android:src="@android:drawable/ic_menu_camera"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="43dp" />
+        <ImageView
+            android:id="@+id/item_photoview"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:background="@android:color/darker_gray"
+            android:cropToPadding="true"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation = "horizontal"
+            android:layout_gravity="center_horizontal">
+        <ImageButton
+            android:id="@+id/item_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Take a photo of the crime scene"
+            android:src="@android:drawable/ic_menu_camera" />
+
+            <ImageButton
+                android:id="@+id/item_choose_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="Choose a photo from your gallery"
+                android:src="@android:drawable/ic_menu_gallery" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/item_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_photoview">
+        app:layout_constraintTop_toBottomOf="@+id/item_images_layout"
+        tools:layout_editor_absoluteX="4dp">
+
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
@@ -48,6 +81,7 @@
 
         <EditText
             android:id="@+id/item_id_text"
+            style="@style/Base.Widget.MaterialComponents.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="" />
@@ -88,4 +122,5 @@
             android:layout_height="wrap_content"
             android:hint="" />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

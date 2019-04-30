@@ -6,6 +6,13 @@
     <string name="item_price_label">Price</string>
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
-
-
+    <string name="title_activity_main">MainActivity</string>
+    <string name="save_item">Save</string>
+    <string name="edit_item">Edit</string>
+    <string name="delete_item">Delete</string>
+    <string name="setting_item">Settings</string>
+    <string name="account_item">Account</string>
+    <string name="about_item">About</string>
+    <string name="help_item">Help</string>
+    <string name="nav_options">Options</string>
 </resources>

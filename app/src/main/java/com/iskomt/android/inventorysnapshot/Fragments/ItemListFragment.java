@@ -1,13 +1,15 @@
-package com.iskomt.android.inventorysnapshot;
+package com.iskomt.android.inventorysnapshot.Fragments;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,20 +18,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.iskomt.android.inventorysnapshot.ItemList;
+import com.iskomt.android.inventorysnapshot.ItemPagerActivity;
 import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.PictureUtils;
+import com.iskomt.android.inventorysnapshot.R;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemListFragment extends Fragment {
+
     private String TAG = "com.iskomt.android.inventorysnapshot.itemlistfragment";
     private RecyclerView mItemRecyclerView;
     private ItemAdapter mAdapter;
@@ -39,8 +53,6 @@ public class ItemListFragment extends Fragment {
     private RapidFloatingActionHelper rfabHelper;
 
     private Callbacks mCallbacks;
-
-
 
     public interface Callbacks {
         void onItemSelected(Item item);
@@ -78,30 +90,52 @@ public class ItemListFragment extends Fragment {
         rfaContent.setOnRapidFloatingActionContentLabelListListener(new RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener() {
             @Override
             public void onRFACItemLabelClick(int position, RFACLabelItem item) {
-                Toast.makeText(getContext(), "clicked label: " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "clicked label: " + position, Toast.LENGTH_SHORT).show();
                 rfabHelper.toggleContent();
+                switch(position){
+                    case 0:
+                        Item i = new Item();
+                        ItemList.get(getActivity()).addItem(i);
+                        updateUI();
+                        mCallbacks.onItemSelected(i);
+                        break;
+                    default:
+                    break;
+
+                }
+
             }
 
             @Override
             public void onRFACItemIconClick(int position, RFACLabelItem item) {
-                Toast.makeText(getContext(), "clicked icon: " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "clicked icon: " + position, Toast.LENGTH_SHORT).show();
                 rfabHelper.toggleContent();
+                switch(position){
+                    case 0:
+                        Item i = new Item();
+                        ItemList.get(getActivity()).addItem(i);
+                        updateUI();
+                        mCallbacks.onItemSelected(i);
+                        break;
+                    default:
+                        break;
+
+                }
 
             }
         });
 
         List<RFACLabelItem> items = new ArrayList<>();
         items.add(new RFACLabelItem<Integer>()
-                .setLabel("Github: wangjiegulu")
-                .setResId(R.drawable.baseline_home_black_24dp)
+                .setLabel("Add Item")
                 .setIconNormalColor(0xffd84315)
                 .setIconPressedColor(0xffbf360c)
                 .setWrapper(0)
         );
+
         rfaContent
                 .setItems(items)
-                .setIconShadowColor(0xff888888)
-        ;
+                .setIconShadowColor(0xff888888);
         rfabHelper = new RapidFloatingActionHelper(
                 getContext(),
                 rfaLayout,
@@ -111,7 +145,6 @@ public class ItemListFragment extends Fragment {
 
 
         if(savedInstanceState != null) {
-
         }
 
         updateUI();
@@ -121,18 +154,24 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.fragment_item_list,menu);
+        inflater.inflate(R.menu.main_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()) {
-            case R.id.add_item:
-                Item i = new Item();
+            case R.id.main_menu_settings:
+                /*Item i = new Item();
                 ItemList.get(getActivity()).addItem(i);
                 updateUI();
                 mCallbacks.onItemSelected(i);
-                Log.d(TAG, "Item added successfully");
+                Log.d(TAG, "Item added successfully");*/
+                return true;
+            case R.id.main_menu_account:
+                return true;
+            case R.id.main_menu_about:
+                return true;
+            case R.id.main_menu_help:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -157,6 +196,7 @@ public class ItemListFragment extends Fragment {
         private ImageView mPhotoView;
         private TextView mNameTextView;
         private TextView mQtyTextView;
+        private TextView mItemOptionsTextView;
 
         public ItemHolder(LayoutInflater inflater, ViewGroup parent){
             super(inflater.inflate(R.layout.list_tem,parent,false));
@@ -165,13 +205,12 @@ public class ItemListFragment extends Fragment {
             mPhotoView = (ImageView) itemView.findViewById(R.id.item_photoholder);
             mNameTextView = (TextView) itemView.findViewById(R.id.item_name);
             mQtyTextView = (TextView) itemView.findViewById(R.id.item_qty);
+            mItemOptionsTextView = (TextView) itemView.findViewById(R.id.item_options);
         }
 
         @Override
         public void onClick(View view) {
-            //mCallbacks.onItemSelected(mItem);
-            Intent intent = ItemPagerActivity.newIntent(getActivity(), mItem.getId());
-            startActivity(intent);
+            mCallbacks.onItemSelected(mItem);
 
         }
 
@@ -180,13 +219,30 @@ public class ItemListFragment extends Fragment {
             mNameTextView.setText(mItem.getName());
             mQtyTextView.setText(Double.toString(mItem.getQty()));
             //Bitmap bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(),getActivity());
-            ItemList itemList = ItemList.get(getContext());
-            Bitmap bitmap = PictureUtils.getScaledBitmap(itemList.getPhotoFile(mItem).getAbsolutePath(),getActivity());
+            //ItemList itemList = ItemList.get(getContext());
+            //Bitmap bitmap = PictureUtils.getScaledBitmap(itemList.getPhotoFile(mItem).getAbsolutePath(),getActivity());
 
-                Log.d(TAG, itemList.getPhotoFile(mItem).getAbsolutePath().toString());
+            //Log.d(TAG, itemList.getPhotoFile(mItem).getAbsolutePath().toString());
+            Toast.makeText(getContext(), "item photo path is " + mItem.getPhotoPath(), Toast.LENGTH_SHORT).show();
+            try {
+                /*if(mItem.getPhotoPath()!=null){
+                File f = new File(mItem.getPhotoPath());
+                Uri selectedPhotoUri = Uri.parse(mItem.getPhotoPath());
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedPhotoUri);
+                mPhotoView.setImageBitmap(bitmap);*/
+                if(mItem.getImage()!=null){
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(mItem.getImage(),0,mItem.getImage().length);
+                    mPhotoView.setImageBitmap(bitmap);
+                }
+            }catch(Exception e){
 
-            //mPhotoView.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
-            mPhotoView.setImageBitmap(bitmap);
+            }
+            /*if(bitmap==null){
+            mPhotoView.setImageDrawable(getResources().getDrawable(R.drawable.image_not_set));}
+            else {
+                //mPhotoView.setImageBitmap(bitmap);
+
+            }*/
         }
     }
 
@@ -202,7 +258,33 @@ public class ItemListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final ItemHolder holder, final int position) {
+            holder.mItemOptionsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Create a pop up menu
+                    PopupMenu popup = new PopupMenu(getContext(),holder.mItemOptionsTextView);
+                    popup.inflate(R.menu.item_list_options);
+                    popup.show();
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch(menuItem.getItemId()){
+                                case R.id.item_list_delete_item:
+                                    //Toast.makeText(getContext(), "Test Delete Successful", Toast.LENGTH_SHORT).show();
+                                    ItemList.get(getContext()).deleteItem(mItemList.get(position));
+                                    updateUI();
+                                    break;
+                                default:
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+
+                }
+            });
+
             Item item = mItemList.get(position);
             holder.bind(item);
         }
@@ -213,5 +295,20 @@ public class ItemListFragment extends Fragment {
         }
 
         public void setItems(List<Item> items){mItemList = items;}
+    }
+
+    private String getPathFromURI(Uri contentUri){
+        String res = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContext().getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+
+        }
+
+        cursor.close();
+        Toast.makeText(getContext(), "Res is " + res, Toast.LENGTH_SHORT).show();
+        return res;
     }
 }

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.room.Room;
+
+import com.iskomt.android.inventorysnapshot.Database.MyAppDatabase;
 import com.iskomt.android.inventorysnapshot.Model.Item;
 
 import java.io.File;
@@ -12,13 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.iskomt.android.inventorysnapshot.ItemDbSchema.*;
 
 public class ItemList {
     private static ItemList sItemList;
-
     private Context mContext;
-    private SQLiteDatabase mDatabase;
+    private static MyAppDatabase mMyAppDatabase;
 
     public static ItemList get(Context context){
         if(sItemList == null){
@@ -28,92 +29,30 @@ public class ItemList {
     }
 
     private ItemList(Context context) {
-
         mContext = context.getApplicationContext();
-        mDatabase = new ItemDbHelper(mContext).getWritableDatabase();
+        mMyAppDatabase = Room.databaseBuilder(context, MyAppDatabase.class, "itemDb").allowMainThreadQueries().build();
     }
 
-    public void addItem(Item item){
-        ContentValues values = getContentValues(item);
-        mDatabase.insert(ItemTable.NAME, null, values);
+    public void addItem(Item item) {
+        mMyAppDatabase.myDao().addItem(item);
     }
 
-    public void deleteItem(Item item){
-        mDatabase.delete(ItemTable.NAME, ItemTable.Cols.UUID + " = ?",new String[]{item.getId().toString()});
+    public void deleteItem(Item item){ mMyAppDatabase.myDao().deleteItem(item);}
+
+    public void updateItem(Item item){ mMyAppDatabase.myDao().updateItem(item); }
+
+    public Item getItem(UUID id){
+        Item item = mMyAppDatabase.myDao().getItem(id.toString());
+        return item;
     }
 
-    public void updateItem(Item item){
-        String uuidString = item.getId().toString();
-        ContentValues values = getContentValues(item);
-        mDatabase.update(ItemTable.NAME, values, ItemTable.Cols.UUID + " = ?", new String[] {uuidString});
-    }
-
-    public void getItem(int position){
+    public List<Item> getItems(){
+        List<Item> items = mMyAppDatabase.myDao().getItems();
+        return items;
     }
 
     public File getPhotoFile(Item item){
         File filesDir = mContext.getFilesDir();
-        return new File(filesDir, item.getPhotoFileName());
-    }
-
-    public List<Item> getItems(){
-        List<Item> items = new ArrayList<>();
-
-        ItemCursorWrapper cursor = queryItems(null,null);
-
-        try{
-
-            cursor.moveToFirst();
-
-            while(!cursor.isAfterLast()){
-
-                items.add(cursor.getItem());
-                cursor.moveToNext();
-            }
-        }finally{
-            cursor.close();
-        }
-        return items;
-    }
-
-    public Item getItem(UUID id) {
-        ItemCursorWrapper cursor = queryItems(ItemTable.Cols.UUID + " = ?", new String[]{id.toString()});
-
-        try{
-            if(cursor.getCount() == 0){
-                return null;
-            }
-
-            cursor.moveToFirst();
-            return cursor.getItem();
-        } finally {
-            cursor.close();
-        }
-    }
-
-    private ItemCursorWrapper queryItems(String whereClause, String[] whereArgs){
-        Cursor cursor = mDatabase.query(
-                ItemTable.NAME,
-                null,
-                whereClause,
-                whereArgs,
-                null,
-                null,
-                null
-        );
-        return new ItemCursorWrapper(cursor);
-    }
-
-    private static ContentValues getContentValues(Item item){
-        ContentValues values = new ContentValues();
-        values.put(ItemTable.Cols.UUID, item.getId().toString());
-        values.put(ItemTable.Cols.NAME, item.getName());
-        values.put(ItemTable.Cols.QUANTITY, item.getQty());
-        values.put(ItemTable.Cols.PRICE, item.getPrice());
-        values.put(ItemTable.Cols.PHOTO, item.getPhotoPath());
-
-        return values;
-    }
-
+        return new File(filesDir, item.getPhotoFileName());}
 
 }

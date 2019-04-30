@@ -3,12 +3,16 @@ package com.iskomt.android.inventorysnapshot;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.iskomt.android.inventorysnapshot.Fragments.ItemFragment;
+import com.iskomt.android.inventorysnapshot.Fragments.ItemListFragment;
 import com.iskomt.android.inventorysnapshot.Model.Item;
 
 import java.util.List;
@@ -42,7 +46,7 @@ public class ItemPagerActivity extends AppCompatActivity implements ItemFragment
             @Override
             public Fragment getItem(int position) {
                 Item item = mItems.get(position);
-                return ItemFragment.newInstance(item.getId());
+                return ItemFragment.newInstance(item.getOriginalUUID());
             }
 
             @Override
@@ -52,7 +56,7 @@ public class ItemPagerActivity extends AppCompatActivity implements ItemFragment
         });
 
         for(int i=0;i<mItems.size();i++){
-            if(mItems.get(i).getId().equals(itemId)){
+            if(mItems.get(i).getOriginalUUID().equals(itemId)){
                 mViewPager.setCurrentItem(i);
                 break;
             }
@@ -62,6 +66,8 @@ public class ItemPagerActivity extends AppCompatActivity implements ItemFragment
 
     @Override
     public void onItemUpdated(Item item) {
-
+        //Toast.makeText(getApplicationContext(), "Contextcontextcontext", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
+        finish();
     }
 }
