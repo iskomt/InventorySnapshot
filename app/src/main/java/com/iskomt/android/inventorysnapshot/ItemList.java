@@ -55,4 +55,7 @@ public class ItemList {
         File filesDir = mContext.getFilesDir();
         return new File(filesDir, item.getPhotoFileName());}
 
+    public int getLength(){
+        return getItems().size();
+    }
 }

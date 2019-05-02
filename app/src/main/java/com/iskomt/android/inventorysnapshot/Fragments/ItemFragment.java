@@ -3,6 +3,7 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -132,8 +134,16 @@ public class ItemFragment extends Fragment {
                 saveItem();
                 return true;
             case R.id.delete_item:
-                deleteItem();
-                mCallbacks.onItemUpdated(mItem);
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Confirmation")
+                        .setMessage("Are you sure you want to delete this item?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deleteItem();
+                                mCallbacks.onItemUpdated(mItem);
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -171,7 +181,7 @@ public class ItemFragment extends Fragment {
         mNameField.addTextChangedListener(mTextWatcher);
 
         mQtyField = (EditText) v.findViewById(R.id.item_qty_text);
-        mQtyField.setText(Double.toString(mItem.getQty()));
+        mQtyField.setText(Integer.toString(mItem.getQty()));
         mQtyField.addTextChangedListener(mTextWatcher);
 
         mPriceField = (EditText) v.findViewById(R.id.item_price_text);
@@ -323,7 +333,7 @@ public class ItemFragment extends Fragment {
 
             String id = mIdField.getText().toString().trim();
             String name = mNameField.getText().toString().trim();
-            Double quantity = Double.parseDouble(mQtyField.getText().toString());
+            int quantity = Integer.parseInt(mQtyField.getText().toString());
             Double price = Double.parseDouble(mPriceField.getText().toString());
 
             if (quantity < 0) {

@@ -2,6 +2,7 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.DrawableUtils;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -96,6 +98,7 @@ public class ItemListFragment extends Fragment {
                 switch(position){
                     case 0:
                         Item i = new Item();
+                        i.setName("Item " + ItemList.get(getActivity()).getLength());
                         ItemList.get(getActivity()).addItem(i);
                         updateUI();
                         mCallbacks.onItemSelected(i);
@@ -212,7 +215,7 @@ public class ItemListFragment extends Fragment {
         public void bind(Item item) {
             mItem = item;
             mNameTextView.setText(mItem.getName());
-            mQtyTextView.setText(Double.toString(mItem.getQty()));
+            mQtyTextView.setText(Integer.toString(mItem.getQty()));
             if(retrieveImage(mItem.getSource())!=null) {
                 mPhotoView.setImageBitmap(retrieveImage(mItem.getSource()));
             }
@@ -262,8 +265,16 @@ public class ItemListFragment extends Fragment {
                             switch(menuItem.getItemId()){
                                 case R.id.item_list_delete_item:
                                     //Toast.makeText(getContext(), "Test Delete Successful", Toast.LENGTH_SHORT).show();
-                                    ItemList.get(getContext()).deleteItem(mItemList.get(position));
-                                    updateUI();
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Delete Confirmation")
+                                            .setMessage("Are you sure you want to delete this item?")
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    ItemList.get(getContext()).deleteItem(mItemList.get(position));
+                                                    updateUI();
+                                                }})
+                                            .setNegativeButton(android.R.string.no, null).show();
                                     break;
                                 default:
                                     break;

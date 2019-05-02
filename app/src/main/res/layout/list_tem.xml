@@ -46,13 +46,23 @@
             app:layout_constraintVertical_bias="0.347" />
 
         <TextView
+            android:id="@+id/label_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/item_qty_label_short"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/item_name"
+            app:layout_constraintTop_toBottomOf="@+id/item_name" />
+
+        <TextView
             android:id="@+id/item_qty"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/item_qty_label"
+            android:layout_marginLeft="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/item_name"
+            app:layout_constraintStart_toEndOf="@+id/label_qty"
             app:layout_constraintTop_toBottomOf="@+id/item_name" />
 
         <TextView

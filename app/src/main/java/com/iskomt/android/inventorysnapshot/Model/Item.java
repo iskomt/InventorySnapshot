@@ -17,7 +17,7 @@ public class Item {
     @ColumnInfo(name = "ITEM_NAME")
     private String mName;
     @ColumnInfo(name = "ITEM_QUANTITY")
-    private double mQty;
+    private int mQty;
     @ColumnInfo(name = "ITEM_PRICE")
     private double mPrice;
     @ColumnInfo(name = "ITEM_PHOTO_PATH")
@@ -64,11 +64,11 @@ public class Item {
         mName = name;
     }
 
-    public double getQty() {
+    public int getQty() {
         return mQty;
     }
 
-    public void setQty(double qty) {
+    public void setQty(int qty) {
         mQty = qty;
     }
 
