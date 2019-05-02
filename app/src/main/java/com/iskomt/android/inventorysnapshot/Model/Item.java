@@ -33,6 +33,7 @@ public class Item {
 
     public Item(UUID UUID) {
         mUUID = UUID.toString();
+        source = -1;
     }
 
     public int getId() {

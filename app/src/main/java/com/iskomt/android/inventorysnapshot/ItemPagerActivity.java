@@ -66,7 +66,6 @@ public class ItemPagerActivity extends AppCompatActivity implements ItemFragment
 
     @Override
     public void onItemUpdated(Item item) {
-        //Toast.makeText(getApplicationContext(), "Contextcontextcontext", Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
     }

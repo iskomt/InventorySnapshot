@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/save_item"
-        android:icon="@android:drawable/ic_menu_save"
-        android:title="@string/save_item"
-        app:showAsAction="ifRoom|withText"/>
-
-    <item
         android:id="@+id/delete_item"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/delete_item"
+        app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/save_item"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/save_item"
         app:showAsAction="ifRoom|withText"/>
 
 </menu>

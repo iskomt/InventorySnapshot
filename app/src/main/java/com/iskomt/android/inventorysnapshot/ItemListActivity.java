@@ -2,6 +2,9 @@ package com.iskomt.android.inventorysnapshot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -30,10 +33,8 @@ public class ItemListActivity extends SingleFragmentActivity implements ItemList
         if(resultCode != Activity.RESULT_OK){
             return;
         } else if (requestCode == REQUEST_DONE) {
-
             ItemListFragment listFragment = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             listFragment.updateUI();
-            Toast.makeText(getApplicationContext(), "I am from activity result", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -43,4 +44,5 @@ public class ItemListActivity extends SingleFragmentActivity implements ItemList
         listFragment.updateUI();
         Toast.makeText(getApplicationContext(), "ITem is updatesdadsfasdfa", Toast.LENGTH_SHORT).show();
     }
+
 }

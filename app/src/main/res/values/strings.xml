@@ -15,4 +15,5 @@
     <string name="about_item">About</string>
     <string name="help_item">Help</string>
     <string name="nav_options">Options</string>
+    <string name="search">Search</string>
 </resources>

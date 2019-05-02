@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.DrawableUtils;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,7 +92,6 @@ public class ItemListFragment extends Fragment {
         rfaContent.setOnRapidFloatingActionContentLabelListListener(new RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener() {
             @Override
             public void onRFACItemLabelClick(int position, RFACLabelItem item) {
-                //Toast.makeText(getContext(), "clicked label: " + position, Toast.LENGTH_SHORT).show();
                 rfabHelper.toggleContent();
                 switch(position){
                     case 0:
@@ -101,7 +102,6 @@ public class ItemListFragment extends Fragment {
                         break;
                     default:
                     break;
-
                 }
 
             }
@@ -161,11 +161,6 @@ public class ItemListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()) {
             case R.id.main_menu_settings:
-                /*Item i = new Item();
-                ItemList.get(getActivity()).addItem(i);
-                updateUI();
-                mCallbacks.onItemSelected(i);
-                Log.d(TAG, "Item added successfully");*/
                 return true;
             case R.id.main_menu_account:
                 return true;
@@ -218,31 +213,26 @@ public class ItemListFragment extends Fragment {
             mItem = item;
             mNameTextView.setText(mItem.getName());
             mQtyTextView.setText(Double.toString(mItem.getQty()));
-            //Bitmap bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(),getActivity());
-            //ItemList itemList = ItemList.get(getContext());
-            //Bitmap bitmap = PictureUtils.getScaledBitmap(itemList.getPhotoFile(mItem).getAbsolutePath(),getActivity());
-
-            //Log.d(TAG, itemList.getPhotoFile(mItem).getAbsolutePath().toString());
-            Toast.makeText(getContext(), "item photo path is " + mItem.getPhotoPath(), Toast.LENGTH_SHORT).show();
-            try {
-                /*if(mItem.getPhotoPath()!=null){
-                File f = new File(mItem.getPhotoPath());
-                Uri selectedPhotoUri = Uri.parse(mItem.getPhotoPath());
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedPhotoUri);
-                mPhotoView.setImageBitmap(bitmap);*/
-                if(mItem.getImage()!=null){
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(mItem.getImage(),0,mItem.getImage().length);
-                    mPhotoView.setImageBitmap(bitmap);
-                }
-            }catch(Exception e){
-
+            if(retrieveImage(mItem.getSource())!=null) {
+                mPhotoView.setImageBitmap(retrieveImage(mItem.getSource()));
             }
-            /*if(bitmap==null){
-            mPhotoView.setImageDrawable(getResources().getDrawable(R.drawable.image_not_set));}
-            else {
-                //mPhotoView.setImageBitmap(bitmap);
-
-            }*/
+        }
+        public Bitmap retrieveImage(int source){
+            Bitmap bitmap = null;
+            try {
+                //0 means photo is from the camera
+                if(source==0){
+                    bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(), getActivity());
+                }else if(source==1){
+                    //1 means photo is from the gallery
+                    if(mItem.getImage()!=null){
+                        bitmap = BitmapFactory.decodeByteArray(mItem.getImage(),0,mItem.getImage().length);
+                    }
+                }else{
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image_not_set);
+                }
+            }catch(Exception e){ }
+            return bitmap;
         }
     }
 
