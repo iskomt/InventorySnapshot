@@ -31,4 +31,10 @@ public interface MyDao {//Data Access Object
     @Query("select * from items where :id = ITEM_UUID")
     public Item getItem(String id);
 
+    @Query("select ITEM_NAME from items")
+    public List<String> getItemNames();
+
+    @Query("select * from items where :name = ITEM_NAME")
+    public Item getItemFromName(String name);
+
 }

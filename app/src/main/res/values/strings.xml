@@ -17,4 +17,7 @@
     <string name="nav_options">Options</string>
     <string name="search">Search</string>
     <string name="item_qty_label_short">Qty:</string>
+    <string name="search_query_hint">Search Here</string>
+    <string name="dialog_ok" />
+    <string name="dialog_cancel" />
 </resources>

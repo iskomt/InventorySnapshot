@@ -164,7 +164,6 @@ public class ItemFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mItemChanged = true;
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -340,7 +339,10 @@ public class ItemFragment extends Fragment {
                 mQtyField.setError("Invalid Quantity");
             } else if (price < 0) {
                 mPriceField.setError("Invalid Price");
-            } else {
+            } else if (name.length()<=0){
+                mNameField.setError("Name cannot be empty");
+            }
+            else {
                 mItem.setUUID(UUID.fromString(id));
                 mItem.setName(name);
                 mItem.setQty(quantity);

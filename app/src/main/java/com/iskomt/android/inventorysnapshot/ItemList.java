@@ -58,4 +58,22 @@ public class ItemList {
     public int getLength(){
         return getItems().size();
     }
+
+    public List<String> getItemNames(){
+        List<String> itemNames = mMyAppDatabase.myDao().getItemNames();
+        return itemNames;
+    }
+
+    public List<Item> Search(String query){
+        List<Item> items = getItems();
+        List<Item> results = new ArrayList<>();
+        for(Item item: items){
+            if(item.getName().toLowerCase().contains(query.toLowerCase())){
+                results.add(item);
+            }
+        }
+        return results;
+    }
+
+
 }

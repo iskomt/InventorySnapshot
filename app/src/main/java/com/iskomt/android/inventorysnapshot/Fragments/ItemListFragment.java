@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -97,12 +98,48 @@ public class ItemListFragment extends Fragment {
                 rfabHelper.toggleContent();
                 switch(position){
                     case 0:
-                        Item i = new Item();
-                        i.setName("Item " + ItemList.get(getActivity()).getLength());
-                        ItemList.get(getActivity()).addItem(i);
-                        updateUI();
-                        mCallbacks.onItemSelected(i);
-                        break;
+                        final Item i = new Item();
+                        final EditText edit = new EditText(getActivity());
+                        edit.setText("Item " + ItemList.get(getActivity()).getLength());
+                        edit.setSelectAllOnFocus(true);
+                        edit.selectAll();
+                        final AlertDialog input = new AlertDialog.Builder(getContext())
+                                .setTitle("New Item")
+                                .setMessage("Enter item name")
+                                .setView(edit)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, null)
+                                .setNegativeButton(android.R.string.no, null).create();
+                        input.show();
+                        input.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                boolean closeDialog = false;
+                                try{
+                                    String name = edit.getText().toString().trim();
+                                    if(name.length()>0){
+                                        i.setName(name);
+                                        ItemList.get(getActivity()).addItem(i);
+                                        input.dismiss();
+                                        closeDialog = true;
+                                        updateUI();
+                                        mCallbacks.onItemSelected(i);
+
+                                    } else {
+                                        edit.setError("Name cannot be null");
+                                        Toast.makeText(getContext(), "Name cannot be null ", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }catch(Exception e){
+
+                                }
+                                if(closeDialog){
+                                    input.dismiss();
+                                }
+                            }
+                        });
+
+                    break;
                     default:
                     break;
                 }
