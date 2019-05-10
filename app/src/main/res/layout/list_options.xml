@@ -22,7 +22,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/item_photoholder"
+            android:id="@+id/options_icon"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
@@ -34,47 +34,16 @@
             app:srcCompat="@android:drawable/ic_dialog_info" />
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/options_name"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_marginStart="16dp"
             android:text="@string/item_name_label"
             android:textAppearance="?android:textAppearanceLarge"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/item_photoholder"
+            app:layout_constraintStart_toEndOf="@+id/options_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.347" />
-
-        <TextView
-            android:id="@+id/label_qty"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/item_qty_label_short"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/item_name"
-            app:layout_constraintTop_toBottomOf="@+id/item_name" />
-
-        <TextView
-            android:id="@+id/item_qty"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/label_qty"
-            app:layout_constraintTop_toBottomOf="@+id/item_name" />
-
-        <TextView
-            android:id="@+id/item_options"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="&#8942;"
-            android:textAppearance="?android:textAppearanceLarge"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

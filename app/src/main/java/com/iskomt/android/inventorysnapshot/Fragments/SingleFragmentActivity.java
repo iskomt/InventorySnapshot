@@ -53,7 +53,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
                         setFragment(new ItemSearchFragment());
                         break;
                     case R.id.bottom_nav_options:
-                        Toast.makeText(getApplicationContext(), "Nearby", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Nearby", Toast.LENGTH_SHORT).show();
+                        setFragment(new OptionsFragment());
                         break;
                 }
                 return true;
@@ -62,7 +63,15 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     }
 
-        private void setFragment(Fragment fragment){
+        public void setFragment(Fragment fragment){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         }
+
+    public void addFragmentOnTop(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }
