@@ -1,17 +1,11 @@
 package com.iskomt.android.inventorysnapshot.Fragments;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,15 +20,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.DrawableUtils;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iskomt.android.inventorysnapshot.ItemList;
-import com.iskomt.android.inventorysnapshot.ItemPagerActivity;
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
@@ -43,7 +34,6 @@ import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -333,20 +323,5 @@ public class ItemListFragment extends Fragment {
         }
 
         public void setItems(List<Item> items){mItemList = items;}
-    }
-
-    private String getPathFromURI(Uri contentUri){
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContext().getContentResolver().query(contentUri, proj, null, null, null);
-        if(cursor.moveToFirst()){
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-
-        }
-
-        cursor.close();
-        Toast.makeText(getContext(), "Res is " + res, Toast.LENGTH_SHORT).show();
-        return res;
     }
 }

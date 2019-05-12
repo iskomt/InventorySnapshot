@@ -1,14 +1,11 @@
 package com.iskomt.android.inventorysnapshot;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import androidx.room.Room;
 
 import com.iskomt.android.inventorysnapshot.Database.MyAppDatabase;
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 
 import java.io.File;
 import java.util.ArrayList;

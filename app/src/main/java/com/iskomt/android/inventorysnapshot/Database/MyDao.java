@@ -1,15 +1,15 @@
 package com.iskomt.android.inventorysnapshot.Database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 
 import java.util.List;
-import java.util.UUID;
 
 @Dao
 public interface MyDao {//Data Access Object
@@ -27,6 +27,9 @@ public interface MyDao {//Data Access Object
 
     @Query("select * from items")
     public List<Item> getItems();
+
+    @Query("select * from items")
+    public LiveData<List<Item>> getLiveItems();
 
     @Query("select * from items where :id = ITEM_UUID")
     public Item getItem(String id);

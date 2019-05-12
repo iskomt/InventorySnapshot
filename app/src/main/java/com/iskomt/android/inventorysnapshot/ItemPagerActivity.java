@@ -1,9 +1,9 @@
 package com.iskomt.android.inventorysnapshot;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,8 +12,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.iskomt.android.inventorysnapshot.Fragments.ItemFragment;
-import com.iskomt.android.inventorysnapshot.Fragments.ItemListFragment;
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 
 import java.util.List;
 import java.util.UUID;

@@ -7,13 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,23 +34,16 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.iskomt.android.inventorysnapshot.ItemList;
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.BasePermissionListener;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,10 +1,9 @@
-package com.iskomt.android.inventorysnapshot.Model;
+package com.iskomt.android.inventorysnapshot.Entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.sql.Blob;
 import java.util.UUID;
 
 @Entity(tableName = "items")

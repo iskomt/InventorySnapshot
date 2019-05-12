@@ -3,26 +3,19 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,14 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iskomt.android.inventorysnapshot.ItemList;
-import com.iskomt.android.inventorysnapshot.Model.Item;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
-import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
-import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
 import java.util.ArrayList;
 import java.util.List;

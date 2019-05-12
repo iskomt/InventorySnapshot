@@ -1,7 +1,6 @@
 package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,30 +9,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iskomt.android.inventorysnapshot.ItemList;
-import com.iskomt.android.inventorysnapshot.Model.Item;
-import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class OptionsFragment extends Fragment {
@@ -136,7 +122,6 @@ public class OptionsFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(getContext(), "Test Delete Successful", Toast.LENGTH_SHORT).show();
             String option = mNameTextView.getText().toString().trim();
             mCallbacks.onOptionSelected(option);
         }

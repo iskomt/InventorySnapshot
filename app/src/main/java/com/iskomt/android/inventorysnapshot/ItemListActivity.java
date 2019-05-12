@@ -2,14 +2,8 @@ package com.iskomt.android.inventorysnapshot;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.iskomt.android.inventorysnapshot.Fragments.AboutFragment;
 import com.iskomt.android.inventorysnapshot.Fragments.HelpFragment;
@@ -20,9 +14,7 @@ import com.iskomt.android.inventorysnapshot.Fragments.LogFragment;
 import com.iskomt.android.inventorysnapshot.Fragments.OptionsFragment;
 import com.iskomt.android.inventorysnapshot.Fragments.SettingsFragment;
 import com.iskomt.android.inventorysnapshot.Fragments.SingleFragmentActivity;
-import com.iskomt.android.inventorysnapshot.Model.Item;
-
-import java.util.Arrays;
+import com.iskomt.android.inventorysnapshot.Entity.Item;
 
 public class ItemListActivity extends SingleFragmentActivity implements ItemListFragment.Callbacks, ItemFragment.Callbacks, ItemSearchFragment.Callbacks, OptionsFragment.Callbacks {
     public static final int REQUEST_DONE=1,REQUEST_SEARCH=2;
