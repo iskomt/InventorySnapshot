@@ -1,11 +1,17 @@
 package com.iskomt.android.inventorysnapshot.Fragments;
 
+import android.Manifest;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -20,20 +27,31 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.MenuView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iskomt.android.inventorysnapshot.ItemList;
+import com.iskomt.android.inventorysnapshot.ItemViewModel;
+import com.iskomt.android.inventorysnapshot.Repository.ItemList;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +66,9 @@ public class ItemListFragment extends Fragment {
     private RapidFloatingActionHelper rfabHelper;
 
     private Callbacks mCallbacks;
+    private ItemViewModel mItemViewModel;
+    private ImageLoader mImageLoader;
+    private PermissionListener dialogPermissionListener;
 
     public interface Callbacks {
         void onItemSelected(Item item);
@@ -74,9 +95,22 @@ public class ItemListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        //checkPermissions(Manifest.permission.MANAGE_DOCUMENTS,"Storage","You need storage permission to use this feature");
         mItemRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
         mItemRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
 
+        mItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
+        mItemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> items) {
+                mAdapter.setItems(items);
+                //Toast.makeText(getContext(), "OnChanged ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //mImageLoader = ImageLoader.getInstance();
         rfaLayout = view.findViewById(R.id.activity_main_rfal);
         rfaBtn = view.findViewById(R.id.activity_main_rfab);
 
@@ -90,7 +124,7 @@ public class ItemListFragment extends Fragment {
                     case 0:
                         final Item i = new Item();
                         final EditText edit = new EditText(getActivity());
-                        edit.setText("Item " + ItemList.get(getActivity()).getLength());
+                        edit.setText("Item " + mItemViewModel.getSize());
                         edit.setSelectAllOnFocus(true);
                         edit.selectAll();
                         final AlertDialog input = new AlertDialog.Builder(getContext())
@@ -109,10 +143,11 @@ public class ItemListFragment extends Fragment {
                                     String name = edit.getText().toString().trim();
                                     if(name.length()>0){
                                         i.setName(name);
-                                        ItemList.get(getActivity()).addItem(i);
+                                        //ItemList.get(getActivity()).insertItem(i);
+                                        mItemViewModel.insert(i);
                                         input.dismiss();
                                         closeDialog = true;
-                                        updateUI();
+                                        //updateUI();
                                         mCallbacks.onItemSelected(i);
 
                                     } else {
@@ -143,15 +178,14 @@ public class ItemListFragment extends Fragment {
                 switch(position){
                     case 0:
                         Item i = new Item();
-                        ItemList.get(getActivity()).addItem(i);
-                        updateUI();
+                        //ItemList.get(getActivity()).insertItem(i);
+                        mItemViewModel.insert(i);
                         mCallbacks.onItemSelected(i);
                         break;
                     default:
                         break;
 
                 }
-
             }
         });
 
@@ -177,7 +211,7 @@ public class ItemListFragment extends Fragment {
         if(savedInstanceState != null) {
         }
 
-        updateUI();
+
         return view;
     }
 
@@ -204,15 +238,12 @@ public class ItemListFragment extends Fragment {
     }
 
     public void updateUI(){
-        ItemList itemList = ItemList.get(getActivity());
-        List<Item> items = itemList.getItems();
 
         if (mAdapter == null){
-            mAdapter = new ItemAdapter(items );
+            mAdapter = new ItemAdapter();
             mItemRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setItems(items);
-            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -243,33 +274,15 @@ public class ItemListFragment extends Fragment {
             mItem = item;
             mNameTextView.setText(mItem.getName());
             mQtyTextView.setText(Integer.toString(mItem.getQty()));
-            if(retrieveImage(mItem.getSource())!=null) {
-                mPhotoView.setImageBitmap(retrieveImage(mItem.getSource()));
-            }
-        }
-        public Bitmap retrieveImage(int source){
-            Bitmap bitmap = null;
-            try {
-                //0 means photo is from the camera
-                if(source==0){
-                    bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(), getActivity());
-                }else if(source==1){
-                    //1 means photo is from the gallery
-                    if(mItem.getImage()!=null){
-                        bitmap = BitmapFactory.decodeByteArray(mItem.getImage(),0,mItem.getImage().length);
-                    }
-                }else{
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image_not_set);
-                }
-            }catch(Exception e){ }
-            return bitmap;
+            if(mItem.getPhotoPath()!=null){
+                Picasso.get().load(new File(mItem.getPhotoPath())).fit().centerCrop().into(mPhotoView);}
+
         }
     }
 
     private class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
-        private List<Item> mItemList;
+        private List<Item> mItemList = new ArrayList<>();
 
-        public ItemAdapter(List<Item> itemList){mItemList = itemList; }
         @NonNull
         @Override
         public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -298,11 +311,56 @@ public class ItemListFragment extends Fragment {
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                                    ItemList.get(getContext()).deleteItem(mItemList.get(position));
-                                                    updateUI();
+                                                    //ItemList.get(getContext()).deleteItem(mItemList.get(position));
+                                                    mItemViewModel.delete(mItemList.get(position));
+                                                    //updateUI();
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                     break;
+                                case R.id.item_list_quick_qty:
+                                    /*IncDecFragment mIncDecFragment = IncDecFragment.newInstance(mItemList.get(position).getQty());
+                                    mIncDecFragment.show(getActivity().getSupportFragmentManager(), "fragment_edit_name");*/
+                                    IncDecFragment mIncDecFragment = IncDecFragment.newInstance(mItemList.get(position).getOriginalUUID());
+                                    mIncDecFragment.show(getActivity().getSupportFragmentManager(), "fragment_edit_name");
+                                   /* mQty.setText(mItemList.get(position).getQty());
+                                    mQty.setSelectAllOnFocus(true);
+                                    mQty.selectAll();
+                                    final AlertDialog input = new AlertDialog.Builder(getContext())
+                                            .setTitle("Set Quantity")
+                                            .setView(getLayoutInflater().inflate(R.layout.item_inc_dec,null))
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setPositiveButton(android.R.string.yes, null)
+                                            .setNegativeButton(android.R.string.no, null).create();
+                                    input.show();*/
+                                    /*input.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            boolean closeDialog = false;
+                                            try{
+                                                String name = edit.getText().toString().trim();
+                                                if(name.length()>0){
+                                                    i.setName(name);
+                                                    //ItemList.get(getActivity()).insertItem(i);
+                                                    mItemViewModel.insert(i);
+                                                    input.dismiss();
+                                                    closeDialog = true;
+                                                    //updateUI();
+                                                    mCallbacks.onItemSelected(i);
+
+                                                } else {
+                                                    edit.setError("Name cannot be null");
+                                                    Toast.makeText(getContext(), "Name cannot be null ", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            }catch(Exception e){
+
+                                            }
+                                            if(closeDialog){
+                                                input.dismiss();
+                                            }
+                                        }
+                                    });*/
+
                                 default:
                                     break;
                             }
@@ -322,6 +380,9 @@ public class ItemListFragment extends Fragment {
             return mItemList.size();
         }
 
-        public void setItems(List<Item> items){mItemList = items;}
+        public void setItems(List<Item> items){
+            mItemList = items;
+            notifyDataSetChanged();
+        }
     }
 }

@@ -1,7 +1,8 @@
-package com.iskomt.android.inventorysnapshot;
+package com.iskomt.android.inventorysnapshot.Repository;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
 import com.iskomt.android.inventorysnapshot.Database.MyAppDatabase;
@@ -30,8 +31,8 @@ public class ItemList {
         mMyAppDatabase = Room.databaseBuilder(context, MyAppDatabase.class, "itemDb").allowMainThreadQueries().build();
     }
 
-    public void addItem(Item item) {
-        mMyAppDatabase.myDao().addItem(item);
+    public void insertItem(Item item) {
+        mMyAppDatabase.myDao().insertItem(item);
     }
 
     public void deleteItem(Item item){ mMyAppDatabase.myDao().deleteItem(item);}
@@ -45,6 +46,11 @@ public class ItemList {
 
     public List<Item> getItems(){
         List<Item> items = mMyAppDatabase.myDao().getItems();
+        return items;
+    }
+
+    public LiveData<List<Item>> getLiveItems(){
+        LiveData<List<Item>> items = mMyAppDatabase.myDao().getAllItems();
         return items;
     }
 

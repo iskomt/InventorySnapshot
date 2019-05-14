@@ -21,14 +21,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iskomt.android.inventorysnapshot.ItemList;
+import com.iskomt.android.inventorysnapshot.ItemViewModel;
+import com.iskomt.android.inventorysnapshot.Repository.ItemList;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +42,7 @@ public class ItemSearchFragment extends Fragment {
     private String TAG = "com.iskomt.android.inventorysnapshot.itemlistfragment";
     private RecyclerView mItemRecyclerView;
     private ItemAdapter mAdapter;
+    private ItemViewModel mItemViewModel;
 
     private Callbacks mCallbacks;
 
@@ -50,6 +56,15 @@ public class ItemSearchFragment extends Fragment {
         mItemRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
         mItemRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
+
+        mItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
+        mItemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> items) {
+                mAdapter.setItems(items);
+                //Toast.makeText(getContext(), "OnChanged ", Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 
@@ -71,7 +86,7 @@ public class ItemSearchFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 //Log.d(TAG, "QueryTextChange: " + s);
-                List<Item> results = ItemList.get(getActivity()).Search(s);
+                List<Item> results = mItemViewModel.Search(s);
                 mAdapter.setFilter(results);
                 return false;
             }
@@ -97,15 +112,11 @@ public class ItemSearchFragment extends Fragment {
     }
 
     public void updateUI(){
-        ItemList itemList = ItemList.get(getActivity());
-        List<Item> items = itemList.getItems();
-
         if (mAdapter == null){
-            mAdapter = new ItemAdapter(items);
+            mAdapter = new ItemAdapter();
             mItemRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setItems(items);
-            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -129,39 +140,22 @@ public class ItemSearchFragment extends Fragment {
         @Override
         public void onClick(View view) {
             mCallbacks.onItemSearch(mItem);
+
         }
 
         public void bind(Item item) {
             mItem = item;
             mNameTextView.setText(mItem.getName());
             mQtyTextView.setText(Integer.toString(mItem.getQty()));
-            if(retrieveImage(mItem.getSource())!=null) {
-                mPhotoView.setImageBitmap(retrieveImage(mItem.getSource()));
-            }
-        }
-        public Bitmap retrieveImage(int source){
-            Bitmap bitmap = null;
-            try {
-                //0 means photo is from the camera
-                if(source==0){
-                    bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(), getActivity());
-                }else if(source==1){
-                    //1 means photo is from the gallery
-                    if(mItem.getImage()!=null){
-                        bitmap = BitmapFactory.decodeByteArray(mItem.getImage(),0,mItem.getImage().length);
-                    }
-                }else{
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image_not_set);
-                }
-            }catch(Exception e){ }
-            return bitmap;
+            if(mItem.getPhotoPath()!=null){
+                Picasso.get().load(new File(mItem.getPhotoPath())).into(mPhotoView);}
+
         }
     }
 
     private class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
-        private List<Item> mItemList;
+        private List<Item> mItemList = new ArrayList<>();
 
-        public ItemAdapter(List<Item> itemList){mItemList = new ArrayList<>(); }
         @NonNull
         @Override
         public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -190,8 +184,9 @@ public class ItemSearchFragment extends Fragment {
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                                    ItemList.get(getContext()).deleteItem(mItemList.get(position));
-                                                    updateUI();
+                                                    //ItemList.get(getContext()).deleteItem(mItemList.get(position));
+                                                    mItemViewModel.delete(mItemList.get(position));
+                                                    //updateUI();
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                     break;
@@ -214,7 +209,10 @@ public class ItemSearchFragment extends Fragment {
             return mItemList.size();
         }
 
-        public void setItems(List<Item> items){mItemList = items;}
+        public void setItems(List<Item> items){
+            mItemList = items;
+            notifyDataSetChanged();
+        }
 
         public void setFilter(List<Item> newItems){
             mItemList = newItems;

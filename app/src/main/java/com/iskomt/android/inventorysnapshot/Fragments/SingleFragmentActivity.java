@@ -12,6 +12,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.iskomt.android.inventorysnapshot.R;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 /**
  * Created by Jose Matundan on 1/16/2019.
@@ -31,6 +38,19 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .threadPoolSize(3) // default
+                .threadPriority(Thread.NORM_PRIORITY - 2) // default
+                .tasksProcessingOrder(QueueProcessingType.FIFO) // default
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCacheSizePercentage(13) // default
+                .writeDebugLogs()
+			.build();
+        ImageLoader.getInstance().init(config);
+
+
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
@@ -66,6 +86,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         public void setFragment(Fragment fragment){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         }
+
+
 
     public void addFragmentOnTop(Fragment fragment) {
         getSupportFragmentManager()

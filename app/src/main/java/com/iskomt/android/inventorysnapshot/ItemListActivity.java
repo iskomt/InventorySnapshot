@@ -28,12 +28,17 @@ public class ItemListActivity extends SingleFragmentActivity implements ItemList
     @Override
     public void onItemSelected(Item item) {
         Intent intent = ItemPagerActivity.newIntent(this, item.getOriginalUUID());
-        startActivityForResult(intent,REQUEST_DONE);
+        //startActivityForResult(intent,REQUEST_DONE);
+        startActivity(intent);
     }
 
     @Override
     public void onItemSearch(Item item) {
         //getSupportFragmentManager().beginTransaction().addToBackStack(null);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .commit();
         Intent intent = ItemPagerActivity.newIntent(this, item.getOriginalUUID());
         startActivityForResult(intent,REQUEST_SEARCH);
     }
@@ -58,8 +63,9 @@ public class ItemListActivity extends SingleFragmentActivity implements ItemList
         if(resultCode != Activity.RESULT_OK){
             return;
         } else if (requestCode == REQUEST_DONE) {
-            ItemListFragment listFragment = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            listFragment.updateUI();
+            //ItemListFragment listFragment = (ItemListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            //listFragment.updateUI();
+            getSupportFragmentManager().popBackStack();
         } else if (requestCode == REQUEST_SEARCH) {
             ItemSearchFragment searchFragment = (ItemSearchFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             searchFragment.updateUI();

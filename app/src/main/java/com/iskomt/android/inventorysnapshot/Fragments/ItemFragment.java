@@ -2,15 +2,21 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +28,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,20 +39,28 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.iskomt.android.inventorysnapshot.ItemList;
+import com.iskomt.android.inventorysnapshot.ItemViewModel;
+import com.iskomt.android.inventorysnapshot.Repository.ItemList;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
+import com.iskomt.android.inventorysnapshot.UriParser;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class ItemFragment extends Fragment {
     private final String TAG = "itemfragment";
@@ -54,7 +69,7 @@ public class ItemFragment extends Fragment {
 
     private Item mItem;
     private EditText mIdField,mNameField, mQtyField, mPriceField;
-    private ImageView mPhotoView;
+    private ImageView mPhotoView,mZoomView;
     private File mPhotoFile;
     private ImageButton mPhotoButton, mGalleryButton;
     private Callbacks mCallbacks;
@@ -62,6 +77,8 @@ public class ItemFragment extends Fragment {
     private boolean mItemChanged = false;
     private TextWatcher mTextWatcher;
     private PermissionListener dialogPermissionListener;
+    private ItemViewModel mItemViewModel;
+    private int mPhotoWidth,mPhotoHeight;
 
     public interface Callbacks {
         void onItemUpdated(Item item);
@@ -70,7 +87,6 @@ public class ItemFragment extends Fragment {
     public static ItemFragment newInstance(UUID itemId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_ITEM_ID, itemId);
-
         ItemFragment fragment = new ItemFragment();
         fragment.setArguments(args);
         return fragment;
@@ -90,11 +106,16 @@ public class ItemFragment extends Fragment {
         Initialize the item from the arguments obtained
          */
         UUID itemId = (UUID) getArguments().getSerializable(ARG_ITEM_ID);
-        mItem = ItemList.get(getActivity()).getItem(itemId);
-
-        mPhotoFile = ItemList.get(getActivity()).getPhotoFile(mItem);
-
-
+        mItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
+        try {
+            mItem = mItemViewModel.getItemFromId(itemId.toString());
+            //Toast.makeText(getContext(), itemId.toString(), Toast.LENGTH_SHORT).show();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mPhotoFile = mItemViewModel.getPhotoFile(getContext(),mItem);
 
 
     }
@@ -102,7 +123,7 @@ public class ItemFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        ItemList.get(getActivity()).updateItem(mItem);
+        //ItemList.get(getActivity()).updateItem(mItem);
     }
 
     @Override
@@ -180,9 +201,19 @@ public class ItemFragment extends Fragment {
         mPhotoButton = (ImageButton) v.findViewById(R.id.item_camera);
         mPhotoView = (ImageView) v.findViewById(R.id.item_photoview);
 
+        mZoomView = (ImageView) new ImageView(getContext());
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ZoomFragment mZoomFragment = ZoomFragment.newInstance(mItem.getPhotoPath());
+                mZoomFragment.show(getActivity().getSupportFragmentManager(), "fragment_edit_name");
+            }
+        });
+
         PackageManager packageManager = getActivity().getPackageManager();
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
+
         mPhotoButton.setEnabled(canTakePhoto);
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,9 +230,6 @@ public class ItemFragment extends Fragment {
             }
         });
 
-        updatePhotoView();
-
-
         mOnTouchListener = new View.OnTouchListener(){
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -210,6 +238,7 @@ public class ItemFragment extends Fragment {
             }
         };
 
+        updatePhotoView();
         return v;
     }
 
@@ -220,63 +249,29 @@ public class ItemFragment extends Fragment {
             return;
         }
         if (requestCode == REQUEST_CAMERA) {
-            mItem.setSource(0); // set source flag
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.iskomt.android.inventorysnapshot.fileprovider", mPhotoFile);
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            mItem.setPhotoPath(mPhotoFile.getPath());
-            Log.d(TAG, "REQUEST_CAMERA: ItemPhotoPath is: " + mItem.getPhotoPath());
+            mItem.setPhotoPath(mPhotoFile.getAbsolutePath());
             updatePhotoView();
-
         }
         else if (requestCode == REQUEST_GALLERY) {
             if (data != null) {
-                mItem.setSource(1); // set source flag
                 Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), contentURI);
-                    saveImageToDatabase(bitmap);
-                    updatePhotoView();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Image saving failed", Toast.LENGTH_SHORT).show();
-                }
+                String path = UriParser.getPathFromUri(getContext(),contentURI);
+                mItem.setPhotoPath(path);
+                updatePhotoView();
             }
         }
 
     }
+
     private void updatePhotoView() {
-
-
-            if(mItem.getSource()==0) {
-                if(mPhotoFile == null || !mPhotoFile.exists()) {
-                    mPhotoView.setImageDrawable(null);
-                    mPhotoView.setContentDescription("Not set");}
-                else {
-                    Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
-                    //Bitmap bitmap = PictureUtils.getScaledBitmap(mItem.getPhotoPath(), getActivity());
-                    mPhotoView.setImageBitmap(bitmap);
-                }
-            }
-            else if(mItem.getSource()==1){
-                if(mItem.getImage()== null) {
-                    mPhotoView.setImageDrawable(null);
-                    mPhotoView.setContentDescription("Not set");
-                }
-                    if (mItem.getImage() != null) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(mItem.getImage(), 0, mItem.getImage().length);
-                        mPhotoView.setImageBitmap(bitmap);
-                    }
-                }
-    }
-
-
-
-
-    public void choosePhotoFromGallery() {
-        checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,"Storage","You need storage permission to use this feature");
-        if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_GALLERY);
+        if(mItem.getPhotoPath() == null) {
+            mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription("Not set");}
+        else {
+            File f = new File(mItem.getPhotoPath());
+            Picasso.get().load(f).noFade().fit().centerCrop().into(mPhotoView);
         }
     }
 
@@ -294,13 +289,13 @@ public class ItemFragment extends Fragment {
         }
     }
 
-    public void saveImageToDatabase(Bitmap bitmap){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-        byte[] data = baos.toByteArray();
-        mItem.setImage(data);
+    public void choosePhotoFromGallery() {
+        checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,"Storage","You need storage permission to use this feature");
+        if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED) {
+            Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, REQUEST_GALLERY);
+        }
     }
-
 
     public void checkPermissions(String permission, String permTitle, String permDeniedText){
         Dexter.withActivity(getActivity())
@@ -337,7 +332,7 @@ public class ItemFragment extends Fragment {
                 mItem.setName(name);
                 mItem.setQty(quantity);
                 mItem.setPrice(price);
-                ItemList.get(getContext()).updateItem(mItem);
+                mItemViewModel.update(mItem);
                 mCallbacks.onItemUpdated(mItem);
                 Toast.makeText(getContext(), "Successfully saved", Toast.LENGTH_SHORT).show();
             }
@@ -348,6 +343,6 @@ public class ItemFragment extends Fragment {
 
     private void deleteItem(){
         Toast.makeText(getContext(), "Successfully deleted", Toast.LENGTH_SHORT).show();
-        ItemList.get(getActivity()).deleteItem(mItem);
+        mItemViewModel.delete(mItem);
     }
 }

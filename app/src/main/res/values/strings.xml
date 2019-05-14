@@ -41,11 +41,11 @@
     </string>
 
     <string name="log_app">
-        <b><p>5/1/2019:\n</p></b><br/>
-        <p>App Created\n\n</p><br/>
+        <b><p>5/1/2019:\n</p></b><br />
+        <p>App Created\n\n</p><br />
 
-        <b><p>5/1/2019:\n</p></b><br/>
-        <p>App Created\n\n</p><br/>
+        <b><p>5/1/2019:\n</p></b><br />
+        <p>App Created\n\n</p><br />
     </string>
 
 
@@ -96,4 +96,6 @@ Maecenas suscipit consequat nulla. Curabitur felis mauris, rutrum eu congue et, 
 
 Integer aliquam velit vel dui commodo tempus. Cras nisl ante, auctor a tortor quis, feugiat iaculis lectus. Maecenas sit amet massa nec massa vulputate molestie id a lectus. Phasellus accumsan leo sit amet ante hendrerit, quis pulvinar ante aliquam. Donec eu elit luctus, iaculis enim non, tempus lorem. Vivamus vitae purus augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis lobortis augue at ligula cursus rhoncus. Praesent mattis nunc ut molestie condimentum. Nulla dapibus mauris at orci volutpat, non mattis purus congue.
     </string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <string name="item_qty_change">Change Quantity</string>
 </resources>
