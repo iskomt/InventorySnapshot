@@ -14,13 +14,14 @@ import com.iskomt.android.inventorysnapshot.Entity.Item;
 @Database(entities = {Item.class}, version = 1,exportSchema = false)
 public abstract class MyAppDatabase extends RoomDatabase {
     private static MyAppDatabase instance;
-    public abstract MyDao myDao();
+    public abstract ItemDao itemDao();
+    public abstract CategoryDao categoryDao();
     public static synchronized MyAppDatabase getInstance(Context context){
         if(instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     MyAppDatabase.class, "item_db")
                     .fallbackToDestructiveMigration()
-                    .addCallback(roomCallback)
+                    //.addCallback(roomCallback)
                     .build();
         }
         return instance;
@@ -35,17 +36,17 @@ public abstract class MyAppDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
         private PopulateDbAsyncTask(MyAppDatabase myAppDatabase){
-            mMyDao = myAppDatabase.myDao();
+            mItemDao = myAppDatabase.itemDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mMyDao.insertItem(new Item());
-            mMyDao.insertItem(new Item());
-            mMyDao.insertItem(new Item());
+            mItemDao.insertItem(new Item());
+            mItemDao.insertItem(new Item());
+            mItemDao.insertItem(new Item());
             return null;
         }
     }

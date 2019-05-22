@@ -3,8 +3,6 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -26,10 +24,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iskomt.android.inventorysnapshot.ItemViewModel;
-import com.iskomt.android.inventorysnapshot.Repository.ItemList;
+import com.iskomt.android.inventorysnapshot.ViewModels.ItemViewModel;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
-import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
 import com.squareup.picasso.Picasso;
 

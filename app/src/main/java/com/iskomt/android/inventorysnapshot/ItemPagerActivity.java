@@ -3,14 +3,11 @@ package com.iskomt.android.inventorysnapshot;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,7 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.iskomt.android.inventorysnapshot.Fragments.ItemFragment;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
-import com.iskomt.android.inventorysnapshot.Repository.ItemList;
+import com.iskomt.android.inventorysnapshot.ViewModels.ItemViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

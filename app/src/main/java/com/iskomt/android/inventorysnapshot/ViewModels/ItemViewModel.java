@@ -1,4 +1,4 @@
-package com.iskomt.android.inventorysnapshot;
+package com.iskomt.android.inventorysnapshot.ViewModels;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,12 +6,14 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.iskomt.android.inventorysnapshot.Entity.Item;
 import com.iskomt.android.inventorysnapshot.Repository.ItemRepository;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -62,6 +64,12 @@ public class ItemViewModel extends AndroidViewModel {
         }
         return results;
     }
+
+    public void sortList(String choice){
+        List<Item> items = mAllItems.getValue();
+    }
+
+
 
     public int getSize(){
         return mAllItems.getValue().size();

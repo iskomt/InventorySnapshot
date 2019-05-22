@@ -1,16 +1,24 @@
 package com.iskomt.android.inventorysnapshot.Entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.UUID;
 
-@Entity(tableName = "items")
-public class Item {
+@Entity(tableName = "items" , foreignKeys = @ForeignKey(entity = Category.class,
+        parentColumns = "CATEGORY_UUID",
+        childColumns = "CATEGORY_ID",
+        onDelete = ForeignKey.NO_ACTION))
+public class Item implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    private int mId;
+    @ColumnInfo(name = "ITEM_ID")
+    private long mId;
     @ColumnInfo(name = "ITEM_UUID")
     private String mUUID;
     @ColumnInfo(name = "ITEM_NAME")
@@ -21,21 +29,25 @@ public class Item {
     private double mPrice;
     @ColumnInfo(name = "ITEM_PHOTO_PATH")
     private String mPhotoPath;
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    private byte[] image;
     @ColumnInfo(name = "ITEM_PHOTO_SOURCE_FLAG")
-    private int source;
+    private int mSource;
+    @ColumnInfo(name = "CATEGORY_ID")
+    private String mCategoryId;
 
-    public Item() {
-        this(UUID.randomUUID());
+
+    public Item() { this(UUID.randomUUID());
     }
 
     public Item(UUID UUID) {
         mUUID = UUID.toString();
-        source = -1;
+        mName = "";
+        mQty = 0;
+        mPrice = 0;
+        mPhotoPath = "";
+        mSource = -1;
     }
 
-    public int getId() {
+    public long getId() {
         return mId;
     }
 
@@ -45,6 +57,10 @@ public class Item {
 
     public String getUUID() {
         return mUUID;
+    }
+
+    public UUID getOriginalUUID() {
+        return UUID.fromString(mUUID);
     }
 
     public void setUUID(String UUID) {
@@ -91,23 +107,58 @@ public class Item {
         return mPhotoPath;
     }
 
-    public UUID getOriginalUUID() {
-        return UUID.fromString(mUUID);
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
     public int getSource() {
-        return source;
+        return mSource;
     }
 
     public void setSource(int source) {
-        this.source = source;
+        this.mSource = source;
     }
+
+    public String getCategoryId() {
+        return mCategoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        mCategoryId = categoryId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected Item(Parcel in) {
+        mId = in.readLong();
+        mUUID = in.readString();
+        mName = in.readString();
+        mQty = in.readInt();
+        mPrice = in.readDouble();
+        mPhotoPath = in.readString();
+        mSource = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
+        dest.writeString(mUUID);
+        dest.writeString(mName);
+        dest.writeInt(mQty);
+        dest.writeDouble(mPrice);
+        dest.writeString(mPhotoPath);
+        dest.writeInt(mSource);
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
 }

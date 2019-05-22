@@ -12,7 +12,7 @@ import com.iskomt.android.inventorysnapshot.Entity.Item;
 import java.util.List;
 
 @Dao
-public interface MyDao {//Data Access Object
+public interface ItemDao {//Data Access Object
 
     /*
     * Insert item into table*/

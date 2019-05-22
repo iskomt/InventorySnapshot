@@ -2,25 +2,16 @@ package com.iskomt.android.inventorysnapshot.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +19,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,25 +29,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.iskomt.android.inventorysnapshot.ItemViewModel;
-import com.iskomt.android.inventorysnapshot.Repository.ItemList;
+import com.iskomt.android.inventorysnapshot.ViewModels.ItemViewModel;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
-import com.iskomt.android.inventorysnapshot.PictureUtils;
 import com.iskomt.android.inventorysnapshot.R;
-import com.iskomt.android.inventorysnapshot.UriParser;
+import com.iskomt.android.inventorysnapshot.Utils.UriParser;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoProvider;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -106,7 +89,7 @@ public class ItemFragment extends Fragment {
         Initialize the item from the arguments obtained
          */
         UUID itemId = (UUID) getArguments().getSerializable(ARG_ITEM_ID);
-        mItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
+        mItemViewModel = ViewModelProviders.of(getActivity()).get(ItemViewModel.class);
         try {
             mItem = mItemViewModel.getItemFromId(itemId.toString());
             //Toast.makeText(getContext(), itemId.toString(), Toast.LENGTH_SHORT).show();

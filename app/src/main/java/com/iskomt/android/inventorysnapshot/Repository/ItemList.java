@@ -32,25 +32,25 @@ public class ItemList {
     }
 
     public void insertItem(Item item) {
-        mMyAppDatabase.myDao().insertItem(item);
+        mMyAppDatabase.itemDao().insertItem(item);
     }
 
-    public void deleteItem(Item item){ mMyAppDatabase.myDao().deleteItem(item);}
+    public void deleteItem(Item item){ mMyAppDatabase.itemDao().deleteItem(item);}
 
-    public void updateItem(Item item){ mMyAppDatabase.myDao().updateItem(item); }
+    public void updateItem(Item item){ mMyAppDatabase.itemDao().updateItem(item); }
 
     public Item getItem(UUID id){
-        Item item = mMyAppDatabase.myDao().getItem(id.toString());
+        Item item = mMyAppDatabase.itemDao().getItem(id.toString());
         return item;
     }
 
     public List<Item> getItems(){
-        List<Item> items = mMyAppDatabase.myDao().getItems();
+        List<Item> items = mMyAppDatabase.itemDao().getItems();
         return items;
     }
 
     public LiveData<List<Item>> getLiveItems(){
-        LiveData<List<Item>> items = mMyAppDatabase.myDao().getAllItems();
+        LiveData<List<Item>> items = mMyAppDatabase.itemDao().getAllItems();
         return items;
     }
 
@@ -63,7 +63,7 @@ public class ItemList {
     }
 
     public List<String> getItemNames(){
-        List<String> itemNames = mMyAppDatabase.myDao().getItemNames();
+        List<String> itemNames = mMyAppDatabase.itemDao().getItemNames();
         return itemNames;
     }
 

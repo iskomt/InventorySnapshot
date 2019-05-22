@@ -1,4 +1,4 @@
-package com.iskomt.android.inventorysnapshot;
+package com.iskomt.android.inventorysnapshot.Utils;
 
 import android.content.ContentUris;
 import android.content.Context;

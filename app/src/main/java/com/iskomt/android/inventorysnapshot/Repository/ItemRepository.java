@@ -5,42 +5,42 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.iskomt.android.inventorysnapshot.Database.ItemDao;
 import com.iskomt.android.inventorysnapshot.Database.MyAppDatabase;
-import com.iskomt.android.inventorysnapshot.Database.MyDao;
 import com.iskomt.android.inventorysnapshot.Entity.Item;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ItemRepository {
-    private MyDao mMyDao;
+    private ItemDao mItemDao;
     private LiveData<List<Item>> mAllItems;
     private static LiveData<Item> mItem;
 
     public ItemRepository(Application application){
         MyAppDatabase database = MyAppDatabase.getInstance(application);
-        mMyDao = database.myDao();
-        mAllItems = mMyDao.getAllItems();
+        mItemDao = database.itemDao();
+        mAllItems = mItemDao.getAllItems();
     }
 
     public void insertItem(Item item) {
-        new InsertItemAsyncTask(mMyDao).execute(item);
+        new InsertItemAsyncTask(mItemDao).execute(item);
     }
 
     public void updateItem(Item item){
-        new UpdateItemAsyncTask(mMyDao).execute(item);
+        new UpdateItemAsyncTask(mItemDao).execute(item);
     }
 
     public void deleteItem(Item item){
-        new DeleteItemAsyncTask(mMyDao).execute(item);
+        new DeleteItemAsyncTask(mItemDao).execute(item);
     }
 
     public Item getItemFromId(String id) throws ExecutionException, InterruptedException {
-        return new GetItemAsyncTask(mMyDao).execute(id).get();
+        return new GetItemAsyncTask(mItemDao).execute(id).get();
     }
 
     public LiveData<Item> getItem(String id){
-        new GetLiveItemAsyncTask(mMyDao).execute(id);
+        new GetLiveItemAsyncTask(mItemDao).execute(id);
         return mItem;
     }
 
@@ -53,69 +53,69 @@ public class ItemRepository {
     }
 
     private static class InsertItemAsyncTask extends AsyncTask<Item, Void, Void>{
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
-        private InsertItemAsyncTask(MyDao myDao){
-            mMyDao = myDao;
+        private InsertItemAsyncTask(ItemDao itemDao){
+            mItemDao = itemDao;
         }
         @Override
         protected Void doInBackground(Item... items) {
-            mMyDao.insertItem(items[0]);
+            mItemDao.insertItem(items[0]);
             return null;
         }
     }
 
     private static class UpdateItemAsyncTask extends AsyncTask<Item, Void, Void>{
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
-        private UpdateItemAsyncTask(MyDao myDao){
-            mMyDao = myDao;
+        private UpdateItemAsyncTask(ItemDao itemDao){
+            mItemDao = itemDao;
         }
         @Override
         protected Void doInBackground(Item... items) {
-            mMyDao.updateItem(items[0]);
+            mItemDao.updateItem(items[0]);
             return null;
         }
     }
 
     private static class DeleteItemAsyncTask extends AsyncTask<Item, Void, Void>{
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
-        private DeleteItemAsyncTask(MyDao myDao){
-            mMyDao = myDao;
+        private DeleteItemAsyncTask(ItemDao itemDao){
+            mItemDao = itemDao;
         }
         @Override
         protected Void doInBackground(Item... items) {
-            mMyDao.deleteItem(items[0]);
+            mItemDao.deleteItem(items[0]);
             return null;
         }
     }
 
     private static class GetItemAsyncTask extends AsyncTask<String, Void, Item>{
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
-        private GetItemAsyncTask(MyDao myDao){
-            mMyDao = myDao;
+        private GetItemAsyncTask(ItemDao itemDao){
+            mItemDao = itemDao;
         }
 
         @Override
         protected Item doInBackground(String... strings) {
-            Item item = mMyDao.getItem(strings[0]);
+            Item item = mItemDao.getItem(strings[0]);
             return item;
         }
 
     }
 
     private static class GetLiveItemAsyncTask extends AsyncTask<String, Void, LiveData<Item>>{
-        private MyDao mMyDao;
+        private ItemDao mItemDao;
 
-        private GetLiveItemAsyncTask(MyDao myDao){
-            mMyDao = myDao;
+        private GetLiveItemAsyncTask(ItemDao itemDao){
+            mItemDao = itemDao;
         }
 
         @Override
         protected LiveData<Item> doInBackground(String... strings) {
-            LiveData<Item> item = mMyDao.getLiveItem(strings[0]);
+            LiveData<Item> item = mItemDao.getLiveItem(strings[0]);
             return item;
         }
 

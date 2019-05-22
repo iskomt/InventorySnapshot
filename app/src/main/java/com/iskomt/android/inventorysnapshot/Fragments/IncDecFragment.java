@@ -1,8 +1,5 @@
 package com.iskomt.android.inventorysnapshot.Fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,22 +8,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.iskomt.android.inventorysnapshot.Entity.Item;
-import com.iskomt.android.inventorysnapshot.ItemViewModel;
+import com.iskomt.android.inventorysnapshot.ViewModels.ItemViewModel;
 import com.iskomt.android.inventorysnapshot.R;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
