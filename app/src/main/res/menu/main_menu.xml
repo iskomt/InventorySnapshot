@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+<item
+    android:id="@+id/main_menu_sort"
+    android:orderInCategory="100"
+    android:title="@string/main_menu_sort"
+    android:icon="@drawable/baseline_sort_white_36dp"
+    app:showAsAction="ifRoom" >
 
+<menu >
     <item
-        android:id="@+id/main_menu_settings"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="@string/setting_item"
+        android:id="@+id/main_menu_sort_name_asc"
+        android:title="@string/item_name_asc"
         app:showAsAction="collapseActionView"/>
     <item
-        android:id="@+id/main_menu_account"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="@string/account_item" />
+        android:id="@+id/main_menu_sort_name_desc"
+        android:title="@string/item_name_desc" />
     <item
-        android:id="@+id/main_menu_about"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/about_item" />
+        android:id="@+id/main_menu_sort_qty_asc"
+        android:title="@string/item_qty_asc" />
     <item
-        android:id="@+id/main_menu_help"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/help_item" />
+        android:id="@+id/main_menu_sort_qty_desc"
+        android:title="@string/item_qty_desc" />
+    <item
+        android:id="@+id/main_menu_sort_price_asc"
+        android:title="@string/item_price_asc" />
+    <item
+        android:id="@+id/main_menu_sort_price_desc"
+        android:title="@string/item_price_desc" />
+    <item
+        android:id="@+id/main_menu_sort_added"
+        android:title="@string/item_added" />
+</menu>
+</item>
 </menu>

@@ -13,9 +13,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import com.iskomt.android.inventorysnapshot.Fragments.ItemFragment;
-import com.iskomt.android.inventorysnapshot.Entity.Item;
-import com.iskomt.android.inventorysnapshot.ViewModels.ItemViewModel;
+import com.iskomt.android.inventorysnapshot.fragments.ItemFragment;
+import com.iskomt.android.inventorysnapshot.entity.Item;
+import com.iskomt.android.inventorysnapshot.viewmodels.ItemViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
