@@ -8,4 +8,8 @@ The app is currently in development. Please consider downloading the [current re
 
 ## Sample work flow
 
-Documentation/alpha-flow.gif
+![alt text](https://github.com/iskomt/InventorySnapshot/blob/master/Documentation/alpha-flow.gif "Logo Title Text 1")
+
+## Architecture
+
+This project utilizes an MVVM architecture
