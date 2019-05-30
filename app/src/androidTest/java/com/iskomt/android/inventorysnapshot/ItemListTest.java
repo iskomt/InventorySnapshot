@@ -4,7 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.iskomt.android.inventorysnapshot.Repository.ItemList;
+import com.iskomt.android.inventorysnapshot.repository.ItemList;
 
 import org.junit.Before;
 import org.junit.Test;
