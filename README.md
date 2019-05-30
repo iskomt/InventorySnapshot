@@ -8,7 +8,7 @@ The app is currently in development. Please consider downloading the [current re
 
 ## Sample work flow
 
-![alt text](https://github.com/iskomt/InventorySnapshot/blob/master/Documentation/alpha-flow.gif "Logo Title Text 1")
+![alt text](https://github.com/iskomt/InventorySnapshot/blob/master/Documentation/alpha-flow-small.gif "Sample workflow")
 
 ## Architecture
 
