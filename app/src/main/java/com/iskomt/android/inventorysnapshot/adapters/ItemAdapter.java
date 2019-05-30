@@ -10,9 +10,7 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iskomt.android.inventorysnapshot.R;
@@ -48,7 +46,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
 
                 //Create a pop up menu
                 PopupMenu popup = new PopupMenu(mContext,holder.getItemOptions());
-                popup.inflate(R.menu.item_list_options);
+                popup.inflate(R.menu.menu_fragment_item_list_options);
                 popup.show();
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override

@@ -2,7 +2,6 @@ package com.iskomt.android.inventorysnapshot.fragments;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -11,12 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -27,10 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.iskomt.android.inventorysnapshot.viewmodels.ItemViewModel;
 import com.iskomt.android.inventorysnapshot.entity.Item;
 import com.iskomt.android.inventorysnapshot.R;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemSearchFragment extends Fragment {
@@ -64,7 +56,7 @@ public class ItemSearchFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.search_menu, menu);
+        menuInflater.inflate(R.menu.menu_search, menu);
 
         MenuItem searchItem = menu.findItem(R.id.menu_item_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();

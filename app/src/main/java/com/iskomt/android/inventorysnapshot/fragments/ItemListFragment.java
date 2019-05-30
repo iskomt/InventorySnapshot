@@ -1,8 +1,6 @@
 package com.iskomt.android.inventorysnapshot.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -12,35 +10,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iskomt.android.inventorysnapshot.adapters.ItemAdapter;
-import com.iskomt.android.inventorysnapshot.adapters.ItemHolder;
 import com.iskomt.android.inventorysnapshot.viewmodels.ItemViewModel;
 import com.iskomt.android.inventorysnapshot.entity.Item;
 import com.iskomt.android.inventorysnapshot.R;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -205,7 +195,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.menu_activity_item_list,menu);
     }
 
     @Override

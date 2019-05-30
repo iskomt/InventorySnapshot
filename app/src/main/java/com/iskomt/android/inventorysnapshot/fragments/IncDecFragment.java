@@ -50,7 +50,7 @@ public class IncDecFragment extends DialogFragment {
 
    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.item_inc_dec, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_item_inc_dec, container, false);
         showBackButton();
        mItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
        UUID itemId = (UUID) getArguments().getSerializable(ARG_ITEM_ID);

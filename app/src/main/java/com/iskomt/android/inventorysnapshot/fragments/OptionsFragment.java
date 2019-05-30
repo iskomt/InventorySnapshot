@@ -114,7 +114,7 @@ public class OptionsFragment extends Fragment {
         private TextView mNameTextView;
 
         public OptionHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.list_options,parent,false));
+            super(inflater.inflate(R.layout.adapter_list_options,parent,false));
             itemView.setOnClickListener(this);
             mIconView = (ImageView) itemView.findViewById(R.id.options_icon);
             mNameTextView = (TextView) itemView.findViewById(R.id.options_name);

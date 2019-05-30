@@ -1,20 +1,15 @@
 package com.iskomt.android.inventorysnapshot.adapters;
 
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iskomt.android.inventorysnapshot.R;
 import com.iskomt.android.inventorysnapshot.entity.Item;
-import com.iskomt.android.inventorysnapshot.fragments.IncDecFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -27,7 +22,7 @@ public class ItemHolder extends RecyclerView.ViewHolder {
     private TextView mItemOptionsTextView;
 
     public ItemHolder(LayoutInflater inflater, ViewGroup parent){
-        super(inflater.inflate(R.layout.list_tem,parent,false));
+        super(inflater.inflate(R.layout.adapter_list_tem,parent,false));
         mPhotoView = (ImageView) itemView.findViewById(R.id.item_photoholder);
         mNameTextView = (TextView) itemView.findViewById(R.id.item_name);
         mQtyTextView = (TextView) itemView.findViewById(R.id.item_qty);

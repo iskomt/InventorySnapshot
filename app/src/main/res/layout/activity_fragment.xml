@@ -24,6 +24,6 @@
         app:itemIconTint="#616060"
         app:itemTextColor="#616060"
         app:layout_constraintTop_toBottomOf="@id/fragment_container"
-        app:menu="@menu/bottom_navigation_menu"
+        app:menu="@menu/menu_bottom_navigation"
         tools:layout_editor_absoluteX="39dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

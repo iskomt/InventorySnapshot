@@ -2,6 +2,7 @@ package com.iskomt.android.inventorysnapshot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
@@ -19,6 +20,12 @@ import com.iskomt.android.inventorysnapshot.entity.Item;
 public class ItemListActivity extends SingleFragmentActivity implements ItemListFragment.Callbacks, ItemFragment.Callbacks, ItemSearchFragment.Callbacks, OptionsFragment.Callbacks {
     public static final int REQUEST_DONE=1,REQUEST_SEARCH=2;
     private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     protected Fragment createFragment() {
