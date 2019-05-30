@@ -4,5 +4,4 @@ Inventory Snapshot is an android app designed for home inventory management purp
 
 ## Installation
 
-The app is currently in development. Please consider downloading (InventorySnapshot/app/release/app-release.apk)
-
+The app is currently in development. Please consider downloading the [current release apk](https://github.com/iskomt/InventorySnapshot/blob/master/app/release/app-release.apk) to preview the app.
